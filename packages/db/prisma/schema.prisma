@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+model Post {
+  id          Int       @id @default(autoincrement())
+  urlId       String    @unique
+  title       String
+  content     String
+  description String
+  imageUrl    String
+  date        DateTime  @default(now())
+  category    String
+  views       Int       @default(0)
+  likes       Int       @default(0)
+  tags        String
+  active      Boolean   @default(true)
+  Likes       Like[]
+  comments    Comment[]
+}
+
+model Like {
+  postId Int
+  userIP String
+  Post   Post   @relation(fields: [postId], references: [id])
+
+  @@id([postId, userIP])
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  content   String
+  authorName String
+  createdAt DateTime  @default(now())
+  postId    Int
+  post      Post      @relation(fields: [postId], references: [id])
+  parentId  Int?      // For nested replies
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+
+  @@index([postId])
+  @@index([parentId])
+}
