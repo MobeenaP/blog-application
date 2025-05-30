@@ -4,7 +4,8 @@ export const posts = [
     content: "Next.js is a powerful React framework...",
     category: "Programming",
     description: "Learn the basics of Next.js and how to get started with your first project.",
-    imageUrl: "https://example.com/nextjs.jpg",
+    // Replace this URL
+    imageUrl: "https://images.unsplash.com/photo-1605745341112-85968b19335b",
     tags: "nextjs,react,javascript",
     urlId: "getting-started-nextjs",
     active: true,
@@ -17,7 +18,8 @@ export const posts = [
     content: "TypeScript adds static typing to JavaScript...",
     category: "Programming",
     description: "Explore the benefits of TypeScript and how it improves your JavaScript development.",
-    imageUrl: "https://example.com/typescript.jpg",
+    // Replace this URL
+    imageUrl: "https://images.unsplash.com/photo-1542831371-29b0f74f9713",
     tags: "typescript,javascript,programming",
     urlId: "understanding-typescript",
     active: true,
@@ -29,6 +31,7 @@ export const posts = [
     title: "Boost your conversion rate",
     content: "# Boost your conversion rate\n\nLorem ipsum dolor sit amet **sint voluptas** consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.",
     description: "How to boost your conversion rate with our new tool",
+    // This URL is already valid - no change needed
     imageUrl: "https://images.unsplash.com/photo-1496128858413-b36217c2ce36",
     category: "Marketing",
     views: 320,
@@ -43,7 +46,8 @@ export const posts = [
     content: `This is the content for sample post ${i + 4}...`,
     category: "General",
     description: `Description for sample post ${i + 4}`,
-    imageUrl: `https://example.com/image${i + 4}.jpg`,
+    // Replace these URLs with picsum.photos URLs that include the post number for variety
+    imageUrl: `https://picsum.photos/seed/post${i + 4}/800/600`,
     tags: "sample,test",
     urlId: `sample-post-${i + 4}`,
     active: true,
@@ -51,4 +55,4 @@ export const posts = [
     views: Math.floor(Math.random() * 100),
     likes: Math.floor(Math.random() * 10)
   }))
-]; 
+];
