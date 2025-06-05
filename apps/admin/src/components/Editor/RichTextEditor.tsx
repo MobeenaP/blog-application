@@ -1,5 +1,6 @@
 import { Editor } from '@tinymce/tinymce-react';
 import { useEffect, useRef } from 'react';
+import type { Editor as TinyMCEEditor } from 'tinymce';
 
 interface RichTextEditorProps {
   initialValue?: string;
@@ -7,7 +8,7 @@ interface RichTextEditorProps {
 }
 
 export function RichTextEditor({ initialValue = '', onChange }: RichTextEditorProps) {
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<TinyMCEEditor | null>(null);
 
   useEffect(() => {
     if (editorRef.current && initialValue) {
@@ -67,4 +68,4 @@ export function RichTextEditor({ initialValue = '', onChange }: RichTextEditorPr
       }}
     />
   );
-} 
+}
