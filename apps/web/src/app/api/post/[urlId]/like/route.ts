@@ -3,9 +3,16 @@ import { client } from "@repo/db/client";
 
 const prisma = client.db;
 
+// Explicitly type the context parameter
+type RouteHandlerContext = {
+  params: {
+    urlId: string;
+  };
+};
+
 export async function POST(
   request: NextRequest,
-  context: { params: { urlId: string } }
+  context: RouteHandlerContext
 ) {
   const { urlId } = context.params;
 
