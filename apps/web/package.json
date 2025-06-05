@@ -10,7 +10,8 @@
     "lint": "next lint --max-warnings 0",
     "check-types": "tsc --noEmit",
     "test": "vitest --browser.headless",
-    "dev:test": "vitest"
+    "dev:test": "vitest",
+    "vercel-build": "pnpm -w run vercel-build"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
