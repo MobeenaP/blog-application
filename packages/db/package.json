@@ -38,12 +38,12 @@
     "seed": "ts-node src/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.3.1",
-    "prisma": "^6.3.1"
+    "@prisma/client": "^6.8.2"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^20.17.17",
+    "prisma": "^6.8.2",
     "ts-node": "^10.9.2",
     "tsup": "^8.0.2",
     "typescript": "^5.7.3"

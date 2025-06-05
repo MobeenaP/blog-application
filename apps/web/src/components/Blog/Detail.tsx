@@ -4,7 +4,6 @@ import type { Post } from "@repo/db/client";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { formatDate } from "@repo/utils";
 import { CommentList } from "../Comments/CommentList";
 import { marked } from "marked";
 
