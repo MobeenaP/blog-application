@@ -10,8 +10,11 @@
     "JWT_SECRET"
   ],
   "tasks": {
+    "db:generate": {
+      "cache": false
+    },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["db:generate", "^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
@@ -45,9 +48,6 @@
     },
     "all:test": {
       "dependsOn": ["test", "test-1", "test-2", "test-3"]
-    },
-    "db:generate": {
-      "dependsOn": ["^db:generate"]
     }
   },
   "envMode": "loose"

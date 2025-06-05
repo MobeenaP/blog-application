@@ -28,8 +28,8 @@
     }
   },
   "scripts": {
-    "build": "tsup src/{client,menu-data,seed}.ts --format esm,cjs --dts",
-    "dev": "tsup src/{client,menu-data,seed}.ts --format esm,cjs --dts --watch",
+    "build": "prisma generate && tsup src/{client,menu-data,seed}.ts --format esm,cjs --dts",
+    "dev": "prisma generate && tsup src/{client,menu-data,seed}.ts --format esm,cjs --dts --watch",
     "db:generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
     "db:seed": "prisma db seed"
