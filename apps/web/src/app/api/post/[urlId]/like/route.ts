@@ -5,17 +5,16 @@ const prisma = client.db;
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { urlId: string } }
+  context: { params: { urlId: string } }
 ) {
-  const { urlId } = params;
+  const { urlId } = context.params;
 
-  
   try {
     // Get user IP from request or use a fallback for development
-    const userIP = request.headers.get('x-forwarded-for') || 
-                   request.headers.get('x-real-ip') || 
+    const userIP = request.headers.get('x-forwarded-for') ||
+                   request.headers.get('x-real-ip') ||
                    '127.0.0.1';
-    
+
     // Get the post
     const post = await prisma.post.findUnique({
       where: { urlId }
@@ -40,24 +39,23 @@ export async function POST(
       // User already liked this post, so unlike it (remove the like)
       await prisma.like.delete({
         where: {
-          // Use the correct composite key
           postId_userIP: {
             postId: post.id,
             userIP: userIP,
           }
         }
       });
-      
+
       // Update post with new like count
       const likeCount = await prisma.like.count({
         where: { postId: post.id }
       });
-      
+
       const updatedPost = await prisma.post.update({
         where: { id: post.id },
         data: { likes: likeCount }
       });
-      
+
       return NextResponse.json({
         success: true,
         message: "Like removed",
@@ -72,17 +70,17 @@ export async function POST(
           userIP: userIP,
         }
       });
-      
+
       // Update post with new like count
       const likeCount = await prisma.like.count({
         where: { postId: post.id }
       });
-      
+
       const updatedPost = await prisma.post.update({
         where: { id: post.id },
         data: { likes: likeCount }
       });
-      
+
       return NextResponse.json({
         success: true,
         message: "Post liked",
