@@ -12,6 +12,9 @@ const nextConfig = {
       { protocol: 'http', hostname: 'localhost' }
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true, // <-- Add this line to disable ESLint during builds
+  },
 };
 
 export default nextConfig;

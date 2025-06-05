@@ -5,9 +5,9 @@ const prisma = client.db;
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ urlId: string }> }
+  context: { params: { urlId: string } }
 ) {
-  const { urlId } = await params;
+  const { urlId } = context.params;
   
   try {
     // Get user IP from request or use a fallback for development
