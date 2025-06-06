@@ -4,7 +4,7 @@ import { client } from "@repo/db/client";
 const prisma = client.db;
 
 async function getCategories() {
-  const res = await fetch('http://localhost:3001/api/categories', { cache: 'no-store' });
+  const res = await fetch('/api/categories', { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch categories');
   }
@@ -12,7 +12,7 @@ async function getCategories() {
 }
 
 async function getTags() {
-  const res = await fetch('http://localhost:3001/api/tags', { cache: 'no-store' });
+  const res = await fetch('/api/tags', { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch tags');
   }
@@ -81,4 +81,4 @@ export function LeftMenuWrapper() {
   return (
     <MenuContent />
   );
-} 
+}
