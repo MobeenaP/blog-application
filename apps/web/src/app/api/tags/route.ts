@@ -4,52 +4,52 @@ import { NextResponse } from "next/server";
 const prisma = client.db;
 
 export async function GET() {
-  // Get all active posts and their tags
-  const posts = await prisma.post.findMany({
-    where: { 
-      AND: [
-        { active: true },
-        // Ensure tags is not empty
-        { 
-          tags: {
-            not: "",
+  try {
+    // Get all active posts and their tags
+    const posts = await prisma.post.findMany({
+      where: {
+        AND: [
+          { active: true },
+          {
+            tags: {
+              not: "",
+            },
           },
-        }
-      ]
-    },
-    select: {
-      tags: true,
-    },
-  });
-
-  // Create a map to store tag counts (case-insensitive)
-  const tagCount: Record<string, { count: number; properName: string }> = {};
-  
-  // Process each post's tags
-  posts.forEach(post => {
-    const tags = post.tags.split(',').map(tag => tag.trim());
-    tags.forEach(tag => {
-      const lowerCaseTag = tag.toLowerCase();
-      if (tagCount[lowerCaseTag]) {
-        tagCount[lowerCaseTag].count++;
-      } else {
-        tagCount[lowerCaseTag] = {
-          count: 1,
-          properName: tag // Keep the proper casing from the first occurrence
-        };
-      }
+        ],
+      },
+      select: {
+        tags: true,
+      },
     });
-  });
 
-  // Convert to array of tag objects
-  const tags = Object.entries(tagCount)
-    .map(([_, { count, properName }]) => ({
+    const tagCount: Record<string, { count: number; properName: string }> = {};
+
+    posts.forEach(post => {
+      if (!post.tags) return; // skip empty/null
+      const tags = post.tags.split(',').map(tag => tag.trim());
+      tags.forEach(tag => {
+        const lowerCaseTag = tag.toLowerCase();
+        if (tagCount[lowerCaseTag]) {
+          tagCount[lowerCaseTag].count++;
+        } else {
+          tagCount[lowerCaseTag] = {
+            count: 1,
+            properName: tag
+          };
+        }
+      });
+    });
+
+    const tags = Object.entries(tagCount).map(([_, { count, properName }]) => ({
       name: properName,
       count,
     }));
 
-  // Sort tags alphabetically
-  tags.sort((a, b) => a.name.localeCompare(b.name));
+    tags.sort((a, b) => a.name.localeCompare(b.name));
 
-  return NextResponse.json(tags);
-} 
+    return NextResponse.json(tags);
+  } catch (error) {
+    console.error("Error in GET /api/tags:", error);
+    return NextResponse.json({ error: "Failed to fetch tags" }, { status: 500 });
+  }
+}
