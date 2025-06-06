@@ -1,28 +1,25 @@
 import type { Post } from "@repo/db/client";
 
-export function history(posts: Post[]) 
-{
-  let allDates: Date[] = [];
-  let uniqueDates: Date[] = [];
+export function history(posts: Post[]) {
+  // Collect all post dates
+  const allDates = posts.map((post) => new Date(post.date));
 
-  allDates = posts
-    .flat()
-    .map((post) => post.date);
+  // Group by year and month
+  const map = new Map<string, { month: number; year: number; count: number }>();
+  allDates.forEach((date) => {
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const key = `${year}-${month}`;
+    if (map.has(key)) {
+      map.get(key)!.count += 1;
+    } else {
+      map.set(key, { month, year, count: 1 });
+    }
+  });
 
-  uniqueDates = [...new Set(allDates.map(date => date.toDateString()))]
-    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-    .map(date => new Date(date));
-
-  const grouped = uniqueDates.map(date => ({
-    month: date.getMonth(),
-    year: date.getFullYear(),
-    posts: allDates.filter(d => d.getFullYear() === date.getFullYear() && d.getMonth() === date.getMonth()),
-  }));
-
-  return grouped.map(({ month, year, posts }) => ({
-    month,
-    year,
-    count: posts.length,
-  }));
+  // Sort descending by year/month
+  return Array.from(map.values()).sort(
+    (a, b) => b.year - a.year || b.month - a.month
+  );
 }
 
