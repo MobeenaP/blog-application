@@ -6,7 +6,7 @@ import { client } from "@repo/db/client";
 const prisma = client.db;
 
 async function getCategories() {
-  const res = await fetch(`${process.env.API_BASE_URL}/api/categories`, {
+  const res = await fetch("/api/categories", {
     cache: "no-store",
   });
   if (!res.ok) {
@@ -16,7 +16,7 @@ async function getCategories() {
 }
 
 async function getTags() {
-  const res = await fetch(`${process.env.API_BASE_URL}/api/tags`, {
+  const res = await fetch("/api/tags", {
     cache: "no-store",
   });
   if (!res.ok) {
