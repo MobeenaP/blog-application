@@ -5,6 +5,9 @@ import { client } from "@repo/db/client";
 const prisma = client.db;
 const POSTS_PER_PAGE = 6;
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default async function Page() {
   const posts = await prisma.post.findMany({
     where: { active: true },

@@ -177,15 +177,16 @@ test.describe("ADMIN UPDATE SCREEN", () => {
         await userPage.goto("/posts/create");
       }
 
-      await userPage.getByLabel("Title").fill("New title");
-      await userPage.getByLabel("Category").fill("React");
-      await userPage.getByLabel("Description").fill("New Description");
-      await userPage.getByLabel("Content").fill("New Content");
-      await userPage
-        .getByLabel("Image URL")
-        .fill("https://m.media-amazon.com/images/I/51NqEfmmBTL.jpg");
-      await userPage.getByLabel("Tags").fill("Tag");
-      await userPage.getByText("Save").click();
+      await userPage.getByTestId("title").fill("New title");
+      await userPage.getByTestId("category").fill("React");
+      await userPage.getByTestId("description").fill("New Description");
+      // Update Content field handling to work with TinyMCE editor
+      const editor = userPage.frameLocator('.tox-edit-area__iframe');
+      await editor.locator('body').click();
+      await editor.locator('body').fill("New Content");
+      await userPage.getByTestId("imageUrl").fill("https://m.media-amazon.com/images/I/51NqEfmmBTL.jpg");
+      await userPage.getByTestId("tags").fill("Tag");
+      await userPage.getByTestId("save-button").click();
 
       await expect(
         userPage.getByText("Post updated successfully"),
