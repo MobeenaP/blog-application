@@ -14,7 +14,7 @@ const scrollPositions = new Map<string, number>();
 interface LeftMenuProps {
   categories: Array<{ name: string; count: number }>;
   tags: Array<{ name: string; count: number }>;
-  history: Array<{ title: string; urlId: string }>;
+  history: Array<{ month: number; year: number; count: number }>; // Fixed type
 }
 
 export function LeftMenu({ categories = [], tags = [], history = [] }: LeftMenuProps) {
