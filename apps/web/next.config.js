@@ -4,37 +4,13 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'plus.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'm.media-amazon.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-      },
-      {
-        protocol: 'https',
-        hostname: 'example.com',
+        hostname: '**', // Allow any HTTPS domain
       },
       {
         protocol: 'http',
-        hostname: 'localhost',
+        hostname: '**', // Allow any HTTP domain (optional, if you want to support http)
       },
-      // Add this for fallback images
-      {
-        protocol: 'https',
-        hostname: 'via.placeholder.com',
-      }
     ],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    formats: ['image/webp'],
   },
 };
 
