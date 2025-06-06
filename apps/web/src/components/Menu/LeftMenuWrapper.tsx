@@ -3,28 +3,41 @@ import { client } from "@repo/db/client";
 
 const prisma = client.db;
 
-function getBaseUrl() {
-  return process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
-}
-
 async function getCategories() {
-  const res = await fetch(`${getBaseUrl()}/api/categories`, {
-    cache: "no-store",
+  // Adjust the query as needed for your schema
+  return prisma.category.findMany({
+    where: { active: true },
+    orderBy: { name: "asc" },
+    select: { id: true, name: true },
   });
-  if (!res.ok) {
-    throw new Error("Failed to fetch categories");
-  }
-  return res.json();
 }
 
 async function getTags() {
-  const res = await fetch(`${getBaseUrl()}/api/tags`, {
-    cache: "no-store",
+  // Aggregate tags from posts
+  const posts = await prisma.post.findMany({
+    where: { active: true, tags: { not: "" } },
+    select: { tags: true },
   });
-  if (!res.ok) {
-    throw new Error("Failed to fetch tags");
-  }
-  return res.json();
+
+  const tagCount: Record<string, { count: number; properName: string }> = {};
+  posts.forEach((post) => {
+    const tags = post.tags.split(",").map((tag) => tag.trim());
+    tags.forEach((tag) => {
+      const lower = tag.toLowerCase();
+      if (tagCount[lower]) {
+        tagCount[lower].count++;
+      } else {
+        tagCount[lower] = { count: 1, properName: tag };
+      }
+    });
+  });
+
+  return Object.entries(tagCount)
+    .map(([_, { count, properName }]) => ({
+      name: properName,
+      count,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 async function getHistory() {
