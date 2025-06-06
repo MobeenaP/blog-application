@@ -1,22 +1,10 @@
-// File: app/components/Menu/LeftMenuWrapper.tsx
-
 import { LeftMenu } from "./LeftMenu";
 import { client } from "@repo/db/client";
 
 const prisma = client.db;
 
 function getBaseUrl() {
-  if (typeof window !== "undefined") {
-    // On client, use relative URL
-    return "";
-  }
-  // On server, use absolute URL
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) {
-    return `https://${vercelUrl}`;
-  }
-  // Fallback for local dev
-  return "http://localhost:3000";
+  return process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 }
 
 async function getCategories() {
@@ -54,30 +42,6 @@ async function getHistory() {
     title: post.title,
     urlId: post.urlId,
   }));
-}
-
-function LoadingMenu() {
-  return (
-    <div className="flex h-full flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800">
-      <div className="flex h-16 shrink-0 items-center px-6 border-b border-gray-200 dark:border-gray-800">
-        <div className="h-10 w-10 animate-pulse bg-gray-200 rounded-full" />
-        <div className="ml-4 h-6 w-32 animate-pulse bg-gray-200 rounded" />
-      </div>
-      <div className="p-6 space-y-6">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="space-y-4">
-            <div className="h-4 w-24 bg-gray-200 rounded animate-pulse" />
-            {[1, 2, 3].map((j) => (
-              <div key={j} className="flex space-x-3">
-                <div className="h-7 w-7 bg-gray-200 rounded-md animate-pulse" />
-                <div className="h-7 w-32 bg-gray-200 rounded animate-pulse" />
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 }
 
 async function MenuContent() {
