@@ -1,37 +1,42 @@
+// File: app/components/Menu/LeftMenuWrapper.tsx
+
 import { LeftMenu } from "./LeftMenu";
 import { client } from "@repo/db/client";
 
 const prisma = client.db;
 
 async function getCategories() {
-  const res = await fetch('/api/categories', { cache: 'no-store' });
+  const res = await fetch(`${process.env.API_BASE_URL}/api/categories`, {
+    cache: "no-store",
+  });
   if (!res.ok) {
-    throw new Error('Failed to fetch categories');
+    throw new Error("Failed to fetch categories");
   }
   return res.json();
 }
 
 async function getTags() {
-  const res = await fetch('/api/tags', { cache: 'no-store' });
+  const res = await fetch(`${process.env.API_BASE_URL}/api/tags`, {
+    cache: "no-store",
+  });
   if (!res.ok) {
-    throw new Error('Failed to fetch tags');
+    throw new Error("Failed to fetch tags");
   }
   return res.json();
 }
 
 async function getHistory() {
-  // Get the 5 most recent active posts
   const recentPosts = await prisma.post.findMany({
     where: { active: true },
-    orderBy: { date: 'desc' },
+    orderBy: { date: "desc" },
     take: 5,
     select: {
       title: true,
       urlId: true,
-    }
+    },
   });
 
-  return recentPosts.map(post => ({
+  return recentPosts.map((post) => ({
     title: post.title,
     urlId: post.urlId,
   }));
@@ -65,11 +70,11 @@ async function MenuContent() {
   const [categories, tags, history] = await Promise.all([
     getCategories(),
     getTags(),
-    getHistory()
+    getHistory(),
   ]);
 
   return (
-    <LeftMenu 
+    <LeftMenu
       categories={categories || []}
       tags={tags || []}
       history={history || []}
@@ -77,8 +82,6 @@ async function MenuContent() {
   );
 }
 
-export function LeftMenuWrapper() {
-  return (
-    <MenuContent />
-  );
+export async function LeftMenuWrapper() {
+  return <MenuContent />;
 }
