@@ -7,9 +7,9 @@ const prisma = client.db;
 export default async function Page({
   params,
 }: {
-  params: Record<string, string>;
+  params: Promise<{ year: string; month: string }>;
 }) {
-  const { year, month } = params;
+  const { year, month } = await params;
 
   const startDate = new Date(Number(year), Number(month) - 1, 1);
   const endDate = new Date(Number(year), Number(month), 1);
