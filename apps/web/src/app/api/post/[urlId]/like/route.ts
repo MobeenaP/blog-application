@@ -3,26 +3,17 @@ import { client } from "@repo/db/client";
 
 const prisma = client.db;
 
-// Explicitly type the context parameter
-type RouteHandlerContext = {
-  params: {
-    urlId: string;
-  };
-};
-
 export async function POST(
   request: NextRequest,
-  context: RouteHandlerContext
+  { params }: { params: { urlId: string } }
 ) {
-  const { urlId } = context.params;
+  const { urlId } = params;
 
   try {
-    // Get user IP from request or use a fallback for development
     const userIP = request.headers.get('x-forwarded-for') ||
                    request.headers.get('x-real-ip') ||
                    '127.0.0.1';
 
-    // Get the post
     const post = await prisma.post.findUnique({
       where: { urlId }
     });
@@ -34,7 +25,6 @@ export async function POST(
       );
     }
 
-    // Check if the user has already liked this post
     const existingLike = await prisma.like.findFirst({
       where: {
         postId: post.id,
@@ -43,7 +33,6 @@ export async function POST(
     });
 
     if (existingLike) {
-      // User already liked this post, so unlike it (remove the like)
       await prisma.like.delete({
         where: {
           postId_userIP: {
@@ -53,7 +42,6 @@ export async function POST(
         }
       });
 
-      // Update post with new like count
       const likeCount = await prisma.like.count({
         where: { postId: post.id }
       });
@@ -70,7 +58,6 @@ export async function POST(
         liked: false
       });
     } else {
-      // Create a new like
       await prisma.like.create({
         data: {
           postId: post.id,
@@ -78,7 +65,6 @@ export async function POST(
         }
       });
 
-      // Update post with new like count
       const likeCount = await prisma.like.count({
         where: { postId: post.id }
       });
