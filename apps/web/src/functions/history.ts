@@ -13,10 +13,16 @@ export function history(posts: Post[])
     .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
     .map(date => new Date(date));
 
-  return uniqueDates.map(date => ({
+  const grouped = uniqueDates.map(date => ({
     month: date.getMonth(),
     year: date.getFullYear(),
-    count: allDates.filter(d => d.getFullYear() === date.getFullYear() && d.getMonth() === date.getMonth()).length,
+    posts: allDates.filter(d => d.getFullYear() === date.getFullYear() && d.getMonth() === date.getMonth()),
+  }));
+
+  return grouped.map(({ month, year, posts }) => ({
+    month,
+    year,
+    count: posts.length,
   }));
 }
 

@@ -1,38 +1,15 @@
 'use client';
 
-import { LinkList } from "./LinkList";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { LinkList } from "./LinkList";
 
-interface HistoryItem {
-  title: string;
-  urlId: string;
-}
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
-export function HistoryList({ history = [] }: { history?: HistoryItem[] }) {
-  const router = useRouter();
-
-  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string, urlId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // Update history
-    try {
-      await fetch('/api/history', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ urlId }),
-      });
-    } catch (error) {
-      console.error('Failed to update history:', error);
-    }
-
-    router.push(href);
-  };
-
-  if (!history || history.length === 0) {
+export function HistoryList({ history }) {
+  if (!Array.isArray(history) || history.length === 0) {
     return (
       <LinkList title="History">
         <div className="px-3 text-sm text-gray-500 dark:text-gray-400">
@@ -44,20 +21,31 @@ export function HistoryList({ history = [] }: { history?: HistoryItem[] }) {
 
   return (
     <LinkList title="History">
-      {history.map((item, index) => {
-        const href = `/post/${item.urlId}`;
-        return (
-          <Link
-            title={item.title}
-            href={href}
-            key={index}
-            className="block truncate px-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md py-2"
-            onClick={(e) => handleClick(e, href, item.urlId)}
-          >
-            {item.title}
-          </Link>
-        );
-      })}
+      <ul className="px-3 py-2">
+        {history.map((item) => {
+          if (
+            !item ||
+            typeof item.month !== "number" ||
+            typeof item.year !== "number" ||
+            typeof item.count !== "number"
+          ) {
+            return null;
+          }
+          return (
+            <li key={`${item.year}-${item.month}`} className="mb-4 flex justify-between items-center">
+              <Link
+                href={`/history/${item.year}/${item.month + 1}`}
+                className="font-medium text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                {MONTHS[item.month]}, {item.year}
+              </Link>
+              <span className="ml-4 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-full px-2 py-0.5 text-xs font-semibold">
+                {item.count}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
     </LinkList>
   );
 }

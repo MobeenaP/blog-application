@@ -62,20 +62,30 @@ async function getTags() {
 }
 
 async function getHistory() {
-  const recentPosts = await prisma.post.findMany({
+  const posts = await prisma.post.findMany({
     where: { active: true },
-    orderBy: { date: 'desc' },
-    take: 5,
-    select: {
-      title: true,
-      urlId: true,
+    select: { date: true },
+  });
+
+  // Group by month/year
+  const map = new Map<string, { month: number; year: number; count: number }>();
+  posts.forEach(post => {
+    const date = new Date(post.date);
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const key = `${year}-${month}`;
+    if (map.has(key)) {
+      map.get(key)!.count += 1;
+    } else {
+      map.set(key, { month, year, count: 1 });
     }
   });
 
-  return recentPosts.map(post => ({
-    title: post.title,
-    urlId: post.urlId,
-  }));
+  // Sort descending by year/month
+  return Array.from(map.values()).sort(
+    (a, b) =>
+      b.year - a.year || b.month - a.month
+  );
 }
 
 function LoadingMenu() {
