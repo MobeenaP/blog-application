@@ -8,7 +8,17 @@ const MONTHS = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-export function HistoryList({ history }) {
+interface HistoryItem {
+  month: number;
+  year: number;
+  count: number;
+}
+
+interface HistoryListProps {
+  history: HistoryItem[];
+}
+
+export function HistoryList({ history }: HistoryListProps) {
   if (!Array.isArray(history) || history.length === 0) {
     return (
       <LinkList title="History">
