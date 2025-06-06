@@ -5,8 +5,22 @@ import { client } from "@repo/db/client";
 
 const prisma = client.db;
 
+function getBaseUrl() {
+  if (typeof window !== "undefined") {
+    // On client, use relative URL
+    return "";
+  }
+  // On server, use absolute URL
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl) {
+    return `https://${vercelUrl}`;
+  }
+  // Fallback for local dev
+  return "http://localhost:3000";
+}
+
 async function getCategories() {
-  const res = await fetch("/api/categories", {
+  const res = await fetch(`${getBaseUrl()}/api/categories`, {
     cache: "no-store",
   });
   if (!res.ok) {
@@ -16,7 +30,7 @@ async function getCategories() {
 }
 
 async function getTags() {
-  const res = await fetch("/api/tags", {
+  const res = await fetch(`${getBaseUrl()}/api/tags`, {
     cache: "no-store",
   });
   if (!res.ok) {
