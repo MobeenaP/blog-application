@@ -5,9 +5,9 @@ const prisma = client.db;
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { urlId: string } }
+  { params }: { params: Promise<{ urlId: string }> }
 ) {
-  const { urlId } = params;
+  const { urlId } = await params;
 
   try {
     const userIP = request.headers.get('x-forwarded-for') ||
