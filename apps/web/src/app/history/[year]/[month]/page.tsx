@@ -7,7 +7,7 @@ const prisma = client.db;
 export default async function Page({
   params,
 }: {
-  params: { year: string; month: string };
+  params: Record<string, string>;
 }) {
   const { year, month } = params;
 
